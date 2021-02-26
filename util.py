@@ -103,17 +103,71 @@ class FixedRandom:
  Data structures useful for implementing SearchAgents
 """
 
-class Stack:
+"""
+    Abstrct class for the Stack, Queue and PQueue
+"""
+class Container(object):
+
+    def __init__(self):
+        self.list = []
+
+    def push(self, item):
+        pass
+
+    def pop(self):
+        pass
+
+    def isEmpty(self):
+        return len(self.list) == 0
+
+class Stack(Container):
     # TODO 01
-    pass
+    def __init__(self):
+        super(Stack, self).__init__()
 
-class Queue:
+    def push(self, item):
+        self.list.append(item)
+
+    def pop(self):
+        return self.list.pop()
+
+class Queue(Container):
     # TODO 02
-    pass
+    def __init__(self):
+        super(Queue, self).__init__(self)
 
-class PriorityQueue:
+    def push(self, item):
+        self.list.insert(0, item)
+
+    def pop(self):
+        return self.list.pop()
+
+class PriorityQueue(Container):
     # TODO 03
-    pass
+    def __init__(self):
+        super(PriorityQueue, self).__init__()
+        self.count = 0
+
+    def push(self, item, priority):
+        entry = (priority, self.count, item)
+        heapq.heappush(self.list, entry)
+        self.count += 1
+
+    def pop(self):
+        (_, _, item) = heapq.heappop(self.list)
+        return item
+
+    def isEmpty(self):
+        return len(self.list) == 0
+
+    def update(self, item, priority):
+        # If item already in priority queue with higher priority, update its priority and rebuild the heap.
+        # If item already in priority queue with equal or lower priority, do nothing.
+        # If item not in priority queue, do the same thing as self.push.
+        for index, (p, c, i) in enumerate(self.list):
+            if i == item and p > priority:
+                self.list[index] = (priority, c, item)
+                heapq.heapify(self.list)
 
 class PriorityQueueWithFunction(PriorityQueue):
     '''
@@ -121,7 +175,12 @@ class PriorityQueueWithFunction(PriorityQueue):
     The function is called to compute the priority of item before being pushed in
     '''
     # TODO 04
-    pass
+    def __init__(self, priorityFunction):
+        self.priorityFunction = priorityFunction  # store the priority function
+        PriorityQueue.__init__(self)  # super-class initializer
+
+    def push(self, item):
+        PriorityQueue.push(self, item, self.priorityFunction(item))
 
 
 def manhattanDistance( xy1, xy2 ):

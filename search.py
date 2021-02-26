@@ -91,12 +91,96 @@ def nullHeuristic(state, problem=None):
 students propose at least two heuristic functions for A*
 '''
 
-def aStarSearch(problem, heuristic=nullHeuristic):
+def foodHeuristic(state, problem):
+    """
+    Heuristics = Distance of nearest food and pacman
+    """
+    pacman, foodGrid = state
+
+    totalDis = 0
+    pre_food = pacman
+    for food in foodGrid.asList():
+        cur_food = food
+        totalDis += util.manhattanDistance(pre_food, cur_food)
+        pre_food = cur_food
+
+    return totalDis
+
+
+def ghostHeuristic(state, problem):
+    pacman = state[0]
+    AllGhostPos = problem.ghostPositions
+    cost = 0
+    for ghostPos in AllGhostPos:
+        if abs(pacman[0] - ghostPos[0]) + abs(pacman[1] - ghostPos[1]) <= 2:
+            cost = 99999
+    return cost
+
+def aStarSearch(problem, heuristic=nullHeuristic, maxThreshold = 999999):
     '''
     return a path to the goal
     '''
     # TODO 10
+    pqueue = util.PriorityQueue()
 
+    visited = []
+
+    pqueue.push((problem.getStartState(), [], 0), heuristic(problem.getStartState(), problem) + 0)
+
+    while not pqueue.isEmpty( ):
+        curElement = pqueue.pop()
+        vertex = curElement[0]
+        resultPath = curElement[1]
+        cost = curElement[2]
+
+        # Check goal
+        if problem.isGoalState(vertex):
+            return resultPath
+        elif cost + heuristic(vertex, problem) > maxThreshold:
+            return cost + heuristic(vertex, problem)
+
+        # Adding new vertex to the visited
+        visited.append(vertex)
+
+        # Get all successors
+        successors = problem.getSuccessors(vertex)
+
+        # Go to next step
+        for successor in successors:
+            childVertex = successor[0]
+            childPath = successor[1]
+            childCost = successor[2]
+
+            # Ignore visited nodes
+            if childVertex not in visited:
+
+                # Adding new vertex to the visited
+                visited.append(childVertex)
+
+                # Computing path of child vertex from start
+                fullPath = resultPath + [childPath]
+
+                # Computing culmulative backward cost of child vertex from start
+                totalCost = cost + childCost
+
+                # Pushing (Node, [Path], Culmulative backward cost) to the pqueue.
+                pqueue.push((childVertex, fullPath, totalCost), totalCost + heuristic(childVertex, problem))
+            
+            else:
+
+                # Update (Node, [Path], Culmulative backward cost) in the pqueue.
+                pqueue.update((childVertex, fullPath, totalCost), totalCost + heuristic(childVertex, problem))
+
+
+def IDA(problem, heuristic=nullHeuristic):
+    threshold = heuristic(problem.getStartState(), problem)
+
+    while True:
+        result = aStarSearch(problem, heuristic, threshold)
+        if isinstance(result,int):
+            threshold = result
+        else:
+            return result
 
 # Abbreviations
 bfs = breadthFirstSearch

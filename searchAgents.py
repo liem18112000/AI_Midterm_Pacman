@@ -149,5 +149,10 @@ class UCSFoodSearchAgent(SearchAgent):
 
 class AStarFoodSearchAgent(SearchAgent):
     def __init__(self):
-        self.searchFunction = lambda prob: search.aStarSearch(prob, foodHeuristic)
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.foodHeuristic)
+        self.searchType = FoodSearchProblem
+
+class IDAFoodSearchAgent(SearchAgent):
+    def __init__(self):
+        self.searchFunction = lambda prob: search.IDA(prob, search.foodHeuristic)
         self.searchType = FoodSearchProblem
