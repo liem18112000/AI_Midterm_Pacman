@@ -106,6 +106,14 @@ def foodHeuristic(state, problem):
 
     return totalDis
 
+def sumHeuristic(state, problem):
+    pacman, foodGrid = state
+
+    totalDis = 0
+    for food in foodGrid.asList():
+        totalDis += util.manhattanDistance(pacman, food)
+
+    return totalDis
 
 def ghostHeuristic(state, problem):
     pacman = state[0]
