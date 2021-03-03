@@ -187,6 +187,18 @@ def manhattanDistance( xy1, xy2 ):
     "Returns the Manhattan distance between points xy1 and xy2"
     return abs( xy1[0] - xy2[0] ) + abs( xy1[1] - xy2[1] )
 
+import math
+
+def euclidianDistance(point1, point2):
+    return int(
+            math.sqrt( 
+                (point1[0] - point2[0]) ** 2 +  (point1[1] - point2[1]) ** 2
+            )
+        )
+
+def mixDistance(point1, point2):
+    return (euclidianDistance(point1, point2) + manhattanDistance(point1, point2)) // 2
+
 """
   Data structures and functions useful for various course projects
 

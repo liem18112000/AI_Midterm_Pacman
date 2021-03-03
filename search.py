@@ -91,7 +91,7 @@ def nullHeuristic(state, problem=None):
 students propose at least two heuristic functions for A*
 '''
 
-def foodHeuristic(state, problem):
+def foodHeuristic(state, problem, distanceFunction):
     """
     Heuristics = Distance of nearest food and pacman
     """
@@ -101,30 +101,24 @@ def foodHeuristic(state, problem):
     pre_food = pacman
     for food in foodGrid.asList():
         cur_food = food
-        totalDis += util.manhattanDistance(pre_food, cur_food)
+        totalDis += distanceFunction(pre_food, cur_food)
         pre_food = cur_food
 
     return totalDis
 
-def sumHeuristic(state, problem):
+def sumHeuristic(state, problem, distanceFunction):
     pacman, foodGrid = state
 
     totalDis = 0
     for food in foodGrid.asList():
-        totalDis += util.manhattanDistance(pacman, food)
+        totalDis += distanceFunction(pacman, food)
 
     return totalDis
 
-def ghostHeuristic(state, problem):
-    pacman = state[0]
-    AllGhostPos = problem.ghostPositions
-    cost = 0
-    for ghostPos in AllGhostPos:
-        if abs(pacman[0] - ghostPos[0]) + abs(pacman[1] - ghostPos[1]) <= 2:
-            cost = 99999
-    return cost
+def mixHeuristic(state, problem, distanceFunction):
+    return (sumHeuristic(state, problem, distanceFunction) + foodHeuristic(state, problem, distanceFunction)) // 2
 
-def aStarSearch(problem, heuristic=nullHeuristic, maxThreshold = 999999):
+def aStarSearch(problem, heuristic=nullHeuristic, distanceFunction = None):
     '''
     return a path to the goal
     '''
@@ -133,7 +127,7 @@ def aStarSearch(problem, heuristic=nullHeuristic, maxThreshold = 999999):
 
     visited = []
 
-    pqueue.push((problem.getStartState(), [], 0), heuristic(problem.getStartState(), problem) + 0)
+    pqueue.push((problem.getStartState(), [], 0), heuristic(problem.getStartState(), problem, distanceFunction) + 0)
 
     while not pqueue.isEmpty( ):
         curElement = pqueue.pop()
@@ -141,11 +135,11 @@ def aStarSearch(problem, heuristic=nullHeuristic, maxThreshold = 999999):
         resultPath = curElement[1]
         cost = curElement[2]
 
+        # print(heuristic(vertex, problem, distanceFunction))
+
         # Check goal
         if problem.isGoalState(vertex):
             return resultPath
-        elif cost + heuristic(vertex, problem) > maxThreshold:
-            return cost + heuristic(vertex, problem)
 
         # Adding new vertex to the visited
         visited.append(vertex)
@@ -172,23 +166,12 @@ def aStarSearch(problem, heuristic=nullHeuristic, maxThreshold = 999999):
                 totalCost = cost + childCost
 
                 # Pushing (Node, [Path], Culmulative backward cost) to the pqueue.
-                pqueue.push((childVertex, fullPath, totalCost), totalCost + heuristic(childVertex, problem))
+                pqueue.push((childVertex, fullPath, totalCost), totalCost + heuristic(childVertex, problem, distanceFunction))
             
             else:
 
                 # Update (Node, [Path], Culmulative backward cost) in the pqueue.
-                pqueue.update((childVertex, fullPath, totalCost), totalCost + heuristic(childVertex, problem))
-
-
-def IDA(problem, heuristic=nullHeuristic):
-    threshold = heuristic(problem.getStartState(), problem)
-
-    while True:
-        result = aStarSearch(problem, heuristic, threshold)
-        if isinstance(result,int):
-            threshold = result
-        else:
-            return result
+                pqueue.update((childVertex, fullPath, totalCost), totalCost + heuristic(childVertex, problem, distanceFunction))
 
 # Abbreviations
 bfs = breadthFirstSearch

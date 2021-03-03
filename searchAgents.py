@@ -149,20 +149,40 @@ class UCSFoodSearchAgent(SearchAgent):
 
 class AStarFoodSearchAgent1(SearchAgent):
     def __init__(self):
-        self.searchFunction = lambda prob: search.aStarSearch(prob, search.foodHeuristic)
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.foodHeuristic, util.manhattanDistance)
         self.searchType = FoodSearchProblem
 
 class AStarFoodSearchAgent2(SearchAgent):
     def __init__(self):
-        self.searchFunction = lambda prob: search.aStarSearch(prob, search.sumHeuristic)
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.sumHeuristic, util.manhattanDistance)
         self.searchType = FoodSearchProblem
 
-class IDAFoodSearchAgent1(SearchAgent):
+class AStarFoodSearchAgent3(SearchAgent):
     def __init__(self):
-        self.searchFunction = lambda prob: search.IDA(prob, search.foodHeuristic)
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.foodHeuristic, util.euclidianDistance)
         self.searchType = FoodSearchProblem
 
-class IDAFoodSearchAgent2(SearchAgent):
+class AStarFoodSearchAgent4(SearchAgent):
     def __init__(self):
-        self.searchFunction = lambda prob: search.IDA(prob, search.sumHeuristic)
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.sumHeuristic, util.euclidianDistance)
+        self.searchType = FoodSearchProblem
+
+class AStarFoodSearchAgent5(SearchAgent):
+    def __init__(self):
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.mixHeuristic, util.manhattanDistance)
+        self.searchType = FoodSearchProblem
+
+class AStarFoodSearchAgent6(SearchAgent):
+    def __init__(self):
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.mixHeuristic, util.euclidianDistance)
+        self.searchType = FoodSearchProblem
+
+class AStarFoodSearchAgent7(SearchAgent):
+    def __init__(self):
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.foodHeuristic, util.mixDistance)
+        self.searchType = FoodSearchProblem
+
+class AStarFoodSearchAgent8(SearchAgent):
+    def __init__(self):
+        self.searchFunction = lambda prob: search.aStarSearch(prob, search.sumHeuristic, util.mixDistance)
         self.searchType = FoodSearchProblem
