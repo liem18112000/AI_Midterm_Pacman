@@ -140,6 +140,11 @@ class DFSFoodSearchAgent(SearchAgent):
         self.searchFunction = lambda prob: search.depthFirstSearch(prob)
         self.searchType = FoodSearchProblem
 
+class DFSMultiFoodSearchAgent(SearchAgent):
+    def __init__(self):
+        self.searchFunction = lambda prob: search.depthFirstSearch_Multi(prob)
+        self.searchType = FoodSearchProblem
+
 
 class UCSFoodSearchAgent(SearchAgent):
     def __init__(self):
