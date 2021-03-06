@@ -189,18 +189,19 @@ def breadthFirstSearch(problem):
     '''
     # TODO 06
     queue = util.Queue()
-    visited = []
+    visited=[]
     queue.push((problem.getStartState(), []))
     while not queue.isEmpty():
-        cur_node, cur_path = queue.pop()
-        if problem.isGoalState():
+        cur_node,cur_path=queue.pop()
+        if problem.isGoalState(cur_node):
             return cur_path
         else:
             if cur_node not in visited:
                 visited.append(cur_node)
                 for child in problem.getSuccessors(cur_node):
-                    child_node, child_path = child
-                    fullPath = cur_path + [child_path]
+                    child_node=child[0]
+                    child_path=child[1]
+                    fullPath=cur_path + [child_path]
                     queue.push((child_node, fullPath))
 
 
@@ -209,7 +210,23 @@ def uniformCostSearch(problem):
     return a path to the goal
     '''
     # TODO 07
-
+    queue = util.PriorityQueue()
+    visited=[]
+    queue.push((problem.getStartState(), [], 0),0)
+    while not queue.isEmpty():
+        cur_node,cur_path,cur_cost=queue.pop()
+        if problem.isGoalState(cur_node):
+            return cur_path
+        else:
+            if cur_node not in visited:
+                visited.append(cur_node)
+                for child in problem.getSuccessors(cur_node):
+                    child_node=child[0]
+                    child_path=child[1]
+                    child_cost=child[2]
+                    fullPath=cur_path + [child_path]
+                    totalCost=cur_cost+child_cost
+                    queue.push((child_node, fullPath,totalCost),totalCost)
 
 def nullHeuristic(state, problem=None):
     """
