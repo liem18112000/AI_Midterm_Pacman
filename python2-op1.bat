@@ -1,0 +1,1 @@
+"C:\Python27\python.exe" "pacman.py" "-l" "mediumMaze"  "-p" "DFSMultiFoodSearchAgent"

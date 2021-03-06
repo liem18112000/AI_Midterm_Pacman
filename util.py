@@ -134,7 +134,7 @@ class Stack(Container):
 class Queue(Container):
     # TODO 02
     def __init__(self):
-        super(Queue, self).__init__(self)
+        super(Queue, self).__init__()
 
     def push(self, item):
         self.list.insert(0, item)
